@@ -123,3 +123,6 @@ Route::middleware('auth:sanctum')->get('clientes/{id}/facturas', [FacturaControl
 
 Route::middleware('auth:sanctum')->post('facturas/consolidar', [FacturaController::class, 'consolidarFactura']);
 //1|fKRCu1WceC52iawScl5i3Ct9HWNreDSx0rU07R745c92873d
+
+
+Route::post('/facturas/completa', [FacturaController::class, 'facturar']);

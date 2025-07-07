@@ -10,7 +10,7 @@ class Factura extends Model
     protected $table = 'facturas';
 
     protected $fillable = [
-        'cliente_id', 'reserva_id', 'usuario_id', 'fecha',
+        'cliente_id', 'usuario_id', 'fecha',
         'subtotal', 'impuesto', 'descuento', 'total', 'estado_pago'
     ];
 
@@ -19,10 +19,6 @@ class Factura extends Model
         return $this->belongsTo(Cliente::class, 'cliente_id');
     }
 
-    public function reserva()
-    {
-        return $this->belongsTo(Reserva::class, 'reserva_id');
-    }
 
     public function usuario()
     {
@@ -30,9 +26,9 @@ class Factura extends Model
     }
 
     public function detalles()
-    {
-    return $this->hasMany(\App\Models\DetalleFactura::class);
-    }
+{
+    return $this->hasMany(DetalleFactura::class);
+}
 
     public function detalleFacturas()
     {

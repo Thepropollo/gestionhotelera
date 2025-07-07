@@ -23,71 +23,71 @@ class FacturaService
         $this->repoDetalle = $repoDetalle;
     }
 
-    public function procesarFacturaCompleta(array $data)
-    {
-        return DB::transaction(function () use ($data) {
-            $subtotal = 0;
-            $detalleFactura = [];
+    public function facturar(array $data)
+{
+    DB::beginTransaction();
 
-            // Procesar reservas
-            foreach ($data['reservas'] as $reserva) {
-                $this->reservaRepo->verificarDisponibilidad(
-                    $reserva['tipo_reserva'],
-                    $reserva['id_objeto'],
-                    $reserva['fecha_inicio'],
-                    $reserva['fecha_fin']
-                );
+    try {
+        $subtotal = 0;
+        $detalles = [];
 
-                $reserva['cliente_id'] = $data['cliente_id'];
-                $reserva['estado'] = 'confirmada';
+        foreach ($data['reservas'] as $reservaId) {
+            $reserva = Reserva::with(['habitacion', 'mesa', 'salon'])->findOrFail($reservaId);
+            $precio = $this->calcularPrecioReserva($reserva);
 
-                $nuevaReserva = $this->reservaRepo->create($reserva);
+            $detalles[] = [
+                'descripcion'     => "Reserva de " . $reserva->tipo_reserva . " ID {$reserva->id_objeto}",
+                'cantidad'        => 1,
+                'precio_unitario' => (float) number_format($precio, 2, '.', ''),
+                'total_linea'     => (float) number_format($precio, 2, '.', '')
+            ];
 
-                $precio = $this->facturaRepo->obtenerPrecioReserva($reserva);
-                $dias = Carbon::parse($reserva['fecha_inicio'])->diffInDays(Carbon::parse($reserva['fecha_fin']));
-                $monto = $precio * max($dias, 1);
+            $subtotal += $precio;
+        }
 
-                $subtotal += $monto;
+        foreach ($data['servicios_extra'] ?? [] as $extra) {
+            $servicio = ServicioExtra::findOrFail($extra['servicio_id']);
+            $linea = $servicio->precio * $extra['cantidad'];
 
-                $detalleFactura[] = [
-                    'descripcion'     => ucfirst($reserva['tipo_reserva']) . " ID {$reserva['id_objeto']}",
-                    'cantidad'        => max($dias, 1),
-                    'precio_unitario' => $precio,
-                    'total_linea'     => $monto
-                ];
-            }
+            $detalles[] = [
+                'descripcion'     => "Servicio extra: " . $servicio->nombre,
+                'cantidad'        => $extra['cantidad'],
+                'precio_unitario' => (float) number_format($servicio->precio, 2, '.', ''),
+                'total_linea'     => (float) number_format($linea, 2, '.', '')
+            ];
 
-            // Servicios extra
-            foreach ($data['servicio_extras'] ?? [] as $servicio) {
-                $precio = $this->facturaRepo->obtenerPrecioServicioExtra($servicio['servicio_extra_id']);
-                $monto = $precio * $servicio['cantidad'];
-                $subtotal += $monto;
+            $subtotal += $linea;
+        }
 
-                $detalleFactura[] = [
-                    'descripcion'     => "Servicio extra ID {$servicio['servicio_extra_id']}",
-                    'cantidad'        => $servicio['cantidad'],
-                    'precio_unitario' => $precio,
-                    'total_linea'     => $monto
-                ];
-            }
+        $impuesto  = $subtotal * 0.12;
+        $descuento = $data['descuento'] ?? 0;
+        $total     = $subtotal + $impuesto - $descuento;
 
-            $impuesto = $subtotal * 0.12;
-            $descuento = 0;
-            $total = $subtotal + $impuesto - $descuento;
+        $factura = Factura::create([
+            'cliente_id'   => $data['cliente_id'],
+            'usuario_id'   => $data['usuario_id'],
+            'fecha'        => now(),
+            'subtotal'     => $subtotal,
+            'impuesto'     => $impuesto,
+            'descuento'    => $descuento,
+            'total'        => $total,
+            'estado_pago'  => 'pendiente'
+        ]);
 
-            return $this->facturaRepo->crearFacturaCompleta([
-                'cliente_id' => $data['cliente_id'],
-                'usuario_id' => auth()->id(),
-                'fecha'      => now(),
-                'subtotal'   => $subtotal,
-                'impuesto'   => $impuesto,
-                'descuento'  => $descuento,
-                'total'      => $total,
-                'estado_pago' => 'pendiente',
-                'detalle'    => $detalleFactura
-            ]);
-        });
+        foreach ($detalles as $detalle) {
+            $factura->detalles()->create($detalle);
+        }
+
+        DB::commit();
+
+        return $factura->load('detalles');
+
+    } catch (\Exception $e) {
+        DB::rollBack();
+        throw $e;
     }
+}
+
 
     public function marcarPagada($id)
     {
