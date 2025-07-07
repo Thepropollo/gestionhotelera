@@ -6,6 +6,7 @@ use App\Repositories\FacturaRepository;
 use App\Repositories\DetalleFacturaRepository;
 use App\Repositories\ReservaRepository;
 use Illuminate\Support\Facades\DB;
+use App\Models\Reserva;
 use Carbon\Carbon;
 
 class FacturaService

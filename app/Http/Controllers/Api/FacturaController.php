@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\FacturaCompletaRequest;
 use App\Http\Requests\StoreFacturaCompletaRequest;
 use App\Http\Requests\ConsolidarFacturaRequest;
-use App\Http\Controllers\Api\JsonResponse;
+use Illuminate\Http\JsonResponse;
 use App\Services\FacturaService;
 
 class FacturaController extends Controller
