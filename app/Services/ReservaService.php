@@ -41,9 +41,10 @@ class ReservaService
     }
 
     public function crear(array $data)
-    {
-        return $this->reservaRepo->create($data);
-    }
+{
+    return $this->reservaRepo->create($data);
+}
+
 
     public function actualizar($id, array $data)
     {

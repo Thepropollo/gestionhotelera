@@ -9,16 +9,17 @@ class StoreReservaRequest extends FormRequest
     public function authorize() { return true; }
 
     public function rules()
-    {
-        return [
-            'cliente_id'   => 'required|exists:clientes,id',
-            'tipo_reserva' => 'required|in:habitacion,salon,mesa',
-            'id_objeto'    => 'required|integer|min:1',
-            'fecha_inicio' => 'required|date|after_or_equal:today',
-            'fecha_fin'    => 'required|date|after:fecha_inicio',
-            'estado'       => 'required|in:pendiente,confirmada,cancelada'
-        ];
-    }
+{
+    return [
+        'cliente_id'   => 'required|exists:clientes,id',
+        'tipo_reserva' => 'required|in:habitacion,salon,mesa',
+        'id_objeto'    => 'required|integer|min:1',
+        'fecha_inicio' => 'required|date|after_or_equal:today',
+        'fecha_fin'    => 'required|date|after:fecha_inicio',
+        'estado'       => 'required|in:pendiente,confirmada,cancelada',
+    ];
+}
+
 
     public function messages()
     {

@@ -9,18 +9,17 @@ class Reserva extends Model
 {
     protected $table = 'reservas';
 
-    protected $casts = [
-        'fecha_inicio' => 'datetime',
-        'fecha_fin' => 'datetime'
-    ];
 
     protected $fillable = [
-        'cliente_id',
-        'tipo_reserva',
-        'id_objeto',
-        'estado',
-        'observaciones'
-    ];
+    'cliente_id',
+    'tipo_reserva',
+    'id_objeto',
+    'fecha_inicio',
+    'fecha_fin',
+    'estado',
+];
+
+
     public function cliente()
     {
         return $this->belongsTo(Cliente::class, 'cliente_id');
