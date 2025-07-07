@@ -46,18 +46,18 @@ class FacturaService
         }
 
         foreach ($data['servicios_extra'] ?? [] as $extra) {
-            $servicio = ServicioExtra::findOrFail($extra['servicio_id']);
-            $linea = $servicio->precio * $extra['cantidad'];
+    $servicio = ServicioExtra::findOrFail($extra['servicio_extra_id']);
+    $linea = $servicio->precio * $extra['cantidad'];
 
-            $detalles[] = [
-                'descripcion'     => "Servicio extra: " . $servicio->nombre,
-                'cantidad'        => $extra['cantidad'],
-                'precio_unitario' => (float) number_format($servicio->precio, 2, '.', ''),
-                'total_linea'     => (float) number_format($linea, 2, '.', '')
-            ];
+    $detalles[] = [
+        'descripcion'     => "Servicio extra: " . $servicio->nombre,
+        'cantidad'        => (int) $extra['cantidad'],
+        'precio_unitario' => (float) number_format($servicio->precio, 2, '.', ''),
+        'total_linea'     => (float) number_format($linea, 2, '.', '')
+    ];
 
-            $subtotal += $linea;
-        }
+    $subtotal += $linea;
+}
 
         $impuesto  = $subtotal * 0.12;
         $descuento = $data['descuento'] ?? 0;

@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\FacturaCompletaRequest;
+use App\Http\Requests\StoreFacturaCompletaRequest;
 use App\Http\Requests\ConsolidarFacturaRequest;
+use App\Http\Controllers\Api\JsonResponse;
 use App\Services\FacturaService;
 
 class FacturaController extends Controller
@@ -22,21 +24,6 @@ class FacturaController extends Controller
         $this->facturaService = $facturaService;
     }
 
-    public function facturar(FacturaCompletaRequest $request)
-    {
-        $factura = $this->facturaService->procesarFacturaCompleta($request->validated());
-        return response()->json($factura, 201);
-    }
-
-    public function marcarComoPagada($id)
-    {
-    $factura = $this->facturaService->marcarPagada($id);
-
-    return response()->json([
-        'message' => 'Factura marcada como pagada correctamente.',
-        'factura' => $factura
-    ]);
-    }
 
     public function facturasPorCliente($clienteId)
     {
@@ -47,15 +34,20 @@ class FacturaController extends Controller
     ]);
     }
 
-    public function consolidarFactura(ConsolidarFacturaRequest $request)
+    public function facturar(StoreFacturaCompletaRequest $request): JsonResponse
     {
-    $data = $request->validated();
-    $factura = $this->facturaService->crearFacturaConsolidada($data);
-
-    return response()->json([
-        'message' => 'Factura consolidada creada exitosamente',
-        'factura' => $factura,
-    ], 201);
+        try {
+            $factura = $this->facturaService->facturar($request->validated());
+            return response()->json([
+                'mensaje' => 'Factura generada exitosamente.',
+                'factura' => $factura
+            ], 201);
+        } catch (\Throwable $e) {
+            return response()->json([
+                'mensaje' => 'Error al generar la factura.',
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
 
     public function store(StoreFacturaRequest $request)
