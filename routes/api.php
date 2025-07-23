@@ -90,6 +90,11 @@ Route::middleware([
 ])->group(function () {
     Route::apiResource('clientes', ClienteController::class);
     Route::apiResource('reservas', ReservaController::class);
+    Route::get('clientes/{id}/reservas', [ReservaController::class, 'reservasPorCliente']);
+    Route::post('reservas/{id}/participaciones', [ReservaController::class, 'asociarParticipantes']);
+    Route::post('reservas/{id}/cancelar', [ReservaController::class, 'cancelar'])->middleware('auth:sanctum');
+    Route::get('reservas/{reservaId}/servicios', [DetalleReservaController::class, 'index']);
+    Route::post('reservas/{reservaId}/servicios', [DetalleReservaController::class, 'store']);
 });
 
 // 3|eZLq4MawYNyPTT14Tj7tJJRmRcG41x9wUehtibNt65d2c503
@@ -105,17 +110,7 @@ use App\Http\Controllers\Api\DisponibilidadController;
 
 // Route::put('reservas/{id}/cancelar', [ReservaController::class, 'cancelar']);
 
-Route::get('clientes/{id}/reservas', [ReservaController::class, 'reservasPorCliente']);
 
-Route::post('reservas/{id}/participaciones', [ReservaController::class, 'asociarParticipantes']);
-
-
-Route::post('reservas/{id}/cancelar', [ReservaController::class, 'cancelar'])->middleware('auth:sanctum');
-
-
-Route::get('reservas/{reservaId}/servicios', [DetalleReservaController::class, 'index']);
-
-Route::post('reservas/{reservaId}/servicios', [DetalleReservaController::class, 'store']);
 
 // Route::middleware(['auth:sanctum'])->patch('facturas/{id}/pagar', [FacturaController::class, 'marcarComoPagada']);
 

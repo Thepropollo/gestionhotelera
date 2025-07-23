@@ -18,8 +18,11 @@ class Reserva extends Model
         'cliente_id',
         'tipo_reserva',
         'id_objeto',
+        'fecha_inicio',     // <-- Agrega esto
+        'fecha_fin',        //
         'estado',
         'observaciones'
+
     ];
     public function cliente()
     {
@@ -33,7 +36,7 @@ class Reserva extends Model
 
     public function detalleReserva()
     {
-    return $this->hasMany(DetalleReserva::class, 'reserva_id');
+        return $this->hasMany(DetalleReserva::class, 'reserva_id');
     }
 
     public function participaciones()
@@ -44,17 +47,17 @@ class Reserva extends Model
 
     public function habitacion()
     {
-    return $this->belongsTo(Habitacion::class, 'id_objeto');
+        return $this->belongsTo(Habitacion::class, 'id_objeto');
     }
 
     public function mesa()
     {
-    return $this->belongsTo(Mesa::class, 'id_objeto');
+        return $this->belongsTo(Mesa::class, 'id_objeto');
     }
 
     public function salon()
     {
-    return $this->belongsTo(Salon::class, 'id_objeto');
+        return $this->belongsTo(Salon::class, 'id_objeto');
     }
 
     public function facturas()
