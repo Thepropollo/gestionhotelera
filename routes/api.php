@@ -102,22 +102,22 @@ Route::middleware([
 // 4|y06UgPemR6T6KgrpNFHQp21PDa2yQCsWW3vpyGRo2c8bd55f
 
 
-// Route::middleware('auth:sanctum')->post('/facturar', [FacturaController::class, 'facturar']);
+Route::middleware('auth:sanctum')->post('/facturar', [FacturaController::class, 'facturar']);
 
 use App\Http\Controllers\Api\DisponibilidadController;
 
-// Route::get('disponibilidad', [DisponibilidadController::class, 'consultar']);
+Route::get('disponibilidad', [DisponibilidadController::class, 'consultar']);
 
-// Route::put('reservas/{id}/cancelar', [ReservaController::class, 'cancelar']);
-
-
-
-// Route::middleware(['auth:sanctum'])->patch('facturas/{id}/pagar', [FacturaController::class, 'marcarComoPagada']);
-
-// Route::middleware('auth:sanctum')->get('clientes/{id}/facturas', [FacturaController::class, 'facturasPorCliente']);
-
-// Route::middleware('auth:sanctum')->post('facturas/consolidar', [FacturaController::class, 'consolidarFactura']);
-// //1|fKRCu1WceC52iawScl5i3Ct9HWNreDSx0rU07R745c92873d
+Route::put('reservas/{id}/cancelar', [ReservaController::class, 'cancelar']);
 
 
-// Route::post('/facturas/completa', [FacturaController::class, 'facturar']);
+
+Route::middleware(['auth:sanctum'])->patch('facturas/{id}/pagar', [FacturaController::class, 'marcarComoPagada']);
+
+Route::middleware('auth:sanctum')->get('clientes/{id}/facturas', [FacturaController::class, 'facturasPorCliente']);
+
+Route::middleware('auth:sanctum')->post('facturas/consolidar', [FacturaController::class, 'consolidarFactura']);
+//1|fKRCu1WceC52iawScl5i3Ct9HWNreDSx0rU07R745c92873d
+
+
+Route::post('/facturas/completa', [FacturaController::class, 'facturar']);

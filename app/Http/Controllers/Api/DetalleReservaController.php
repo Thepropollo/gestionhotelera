@@ -26,28 +26,22 @@ class DetalleReservaController extends Controller
         return response()->json($this->detalleService->eliminar($id));
     }
 
-
-    public function __construct(DetalleReservaService $service)
+    public function __construct(DetalleReservaService $detalleService)
     {
-        $this->service = $service;
+        $this->detalleService = $detalleService;
     }
 
-    public function store(StoreDetalleReservaRequest $request)
-    {
-    $data = $request->validated();
-    $reservaId = $data['reserva_id'];
 
-    return response()->json(
-        $this->service->agregarServicioExtra($reservaId, $data),
-        201
-    );
+    public function store(StoreDetalleReservaRequest $request, $reservaId)
+    {
+        return $this->detalleService->agregarServicioExtra($reservaId, $request->validated());
     }
 
 
     public function index($reservaId)
     {
         return response()->json(
-            $this->service->obtenerPorReserva($reservaId)
+            $this->detalleService->obtenerPorReserva($reservaId)
         );
     }
 

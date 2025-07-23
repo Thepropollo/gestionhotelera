@@ -8,6 +8,9 @@ use App\Http\Requests\StoreFacturaCompletaRequest;
 use App\Http\Requests\ConsolidarFacturaRequest;
 use Illuminate\Http\JsonResponse;
 use App\Services\FacturaService;
+use App\Models\Factura;
+use App\Models\ServicioExtra;
+
 
 class FacturaController extends Controller
 {
@@ -27,11 +30,11 @@ class FacturaController extends Controller
 
     public function facturasPorCliente($clienteId)
     {
-    $facturas = $this->facturaService->obtenerPorCliente($clienteId);
+        $facturas = $this->facturaService->obtenerPorCliente($clienteId);
 
-    return response()->json([
-        'facturas' => $facturas
-    ]);
+        return response()->json([
+            'facturas' => $facturas
+        ]);
     }
 
     public function facturar(StoreFacturaCompletaRequest $request): JsonResponse
@@ -54,7 +57,7 @@ class FacturaController extends Controller
     {
         $data = $request->validated();
 
-        $factura = $this->service->crearFacturaConReservas($data);
+        $factura = $this->facturaService->crearFacturaConReservas($data);
 
         return response()->json($factura, 201);
     }

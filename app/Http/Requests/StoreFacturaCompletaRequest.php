@@ -11,27 +11,24 @@ class StoreFacturaCompletaRequest extends FormRequest
         return true;
     }
 
-   public function rules(): array
-{
-    return [
-        'cliente_id' => 'required|exists:clientes,id',
-        'usuario_id' => 'required|exists:usuarios,id',
+    public function rules(): array
+    {
+        return [
+            'cliente_id' => 'required|exists:clientes,id',
+            'usuario_id' => 'required|exists:usuarios,id',
 
-        // Reservas completas
-        'reservas' => 'required|array|min:1',
-        'reservas.*.tipo_reserva' => 'required|in:habitacion,mesa,salon',
-        'reservas.*.id_objeto' => 'required|integer|min:1',
-        'reservas.*.fecha_inicio' => 'required|date|after_or_equal:today',
-        'reservas.*.fecha_fin' => 'required|date|after:reservas.*.fecha_inicio',
+            // Cambiar reservas a array de IDs
+            'reservas' => 'required|array|min:1',
+            'reservas.*' => 'required|integer|exists:reservas,id',
 
-        // Servicios extra (tabla correcta: servicios_extras)
-        'servicios_extra' => 'nullable|array',
-        'servicios_extra.*.servicio_extra_id' => 'required|exists:servicio_extras,id',
-        'servicios_extra.*.cantidad' => 'required|numeric|min:1',
+            // Servicios extra (tabla servicios_extras)
+            'servicio_extra' => 'nullable|array',
+            'servicio_extra.*.servicio_extra_id' => 'required|exists:servicios_extras,id',
+            'servicio_extra.*.cantidad' => 'required|numeric|min:1',
 
-        'descuento' => 'nullable|numeric|min:0'
-    ];
-}
+            'descuento' => 'nullable|numeric|min:0'
+        ];
+    }
 
 
     public function messages(): array
@@ -39,10 +36,11 @@ class StoreFacturaCompletaRequest extends FormRequest
         return [
             'cliente_id.required' => 'El cliente es obligatorio.',
             'usuario_id.required' => 'El usuario es obligatorio.',
-            'reservas.required'   => 'Debe incluir al menos una reserva.',
-            'reservas.*.exists'   => 'Una de las reservas no existe.',
-            'servicios_extra.*.servicio_id.exists' => 'Un servicio extra no existe.',
+            'reservas.required' => 'Debe incluir al menos una reserva.',
+            'reservas.*.exists' => 'Una de las reservas no existe.',
+            'servicios_extra.*.servicio_extra_id.exists' => 'Un servicio extra no existe.',
             'servicios_extra.*.cantidad.min' => 'La cantidad debe ser al menos 1.',
         ];
     }
 }
+

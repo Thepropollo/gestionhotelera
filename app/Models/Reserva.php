@@ -65,18 +65,34 @@ class Reserva extends Model
         return $this->hasMany(Factura::class, 'reserva_id');
     }
 
-    // Método para obtener el objeto reservado (habitacion, mesa o salon)
     public function objetoReservado()
     {
         switch ($this->tipo_reserva) {
             case 'habitacion':
-                return $this->belongsTo(Habitacion::class, 'id_objeto');
+                $habitacion = Habitacion::find($this->id_objeto);
+                if (!$habitacion) {
+                    throw new \Exception("Habitación no encontrada con ID {$this->id_objeto}");
+                }
+                return $habitacion;
+
             case 'mesa':
-                return $this->belongsTo(Mesa::class, 'id_objeto');
+                $mesa = Mesa::find($this->id_objeto);
+                if (!$mesa) {
+                    throw new \Exception("Mesa no encontrada con ID {$this->id_objeto}");
+                }
+                return $mesa;
+
             case 'salon':
-                return $this->belongsTo(Salon::class, 'id_objeto');
+                $salon = Salon::find($this->id_objeto);
+                if (!$salon) {
+                    throw new \Exception("Salón no encontrado con ID {$this->id_objeto}");
+                }
+                return $salon;
+
             default:
-                return null;
+                throw new \Exception("Tipo de reserva inválido: {$this->tipo_reserva}");
         }
     }
+
+
 }
