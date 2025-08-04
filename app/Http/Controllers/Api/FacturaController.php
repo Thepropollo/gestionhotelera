@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreFacturaRequest;
 use App\Http\Requests\FacturaCompletaRequest;
 use App\Http\Requests\StoreFacturaCompletaRequest;
 use App\Http\Requests\ConsolidarFacturaRequest;

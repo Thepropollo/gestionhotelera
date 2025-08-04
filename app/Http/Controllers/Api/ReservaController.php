@@ -24,18 +24,18 @@ class ReservaController extends Controller
     }
 
     public function store(StoreReservaRequest $request)
-    {
-        $data = $request->validated();
+{
+    $data = $request->validated();
 
-        $this->reservaService->validarDisponibilidad(
-            $data['tipo_reserva'],
-            $data['id_objeto'],
-            $data['fecha_inicio'],
-            $data['fecha_fin']
-        );
+    $this->reservaService->validarDisponibilidad(
+        $data['tipo_reserva'],
+        $data['id_objeto'],
+        $data['fecha_inicio'],
+        $data['fecha_fin']
+    );
 
-        return response()->json($this->reservaService->crear($request->validated()), 201);
-    }
+    return response()->json($this->reservaService->crear($data), 201);
+}
 
     public function show($id)
     {
