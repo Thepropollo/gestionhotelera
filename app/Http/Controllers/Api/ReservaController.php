@@ -44,7 +44,16 @@ class ReservaController extends Controller
 
     public function update(UpdateReservaRequest $request, $id)
     {
-        return response()->json($this->reservaService->actualizar($id, $request->validated()));
+        $data = $request->validated();
+
+        $this->reservaService->validarDisponibilidad(
+            $data['tipo_reserva'],
+            $data['id_objeto'],
+            $data['fecha_inicio'],
+            $data['fecha_fin']
+        );
+
+        return response()->json($this->reservaService->actualizar($id, $request->validated()), 201);
     }
 
     public function destroy($id)
@@ -59,28 +68,28 @@ class ReservaController extends Controller
 
     public function reservasPorCliente($clienteId)
     {
-    return response()->json($this->reservaService->obtenerPorCliente($clienteId));
+        return response()->json($this->reservaService->obtenerPorCliente($clienteId));
     }
 
     public function asociarParticipantes(Request $request, $reservaId)
     {
-    $request->validate([
-        'usuarios' => 'required|array|min:1',
-        'usuarios.*.usuario_id' => 'required|exists:usuarios,id',
-        'usuarios.*.rol_en_reserva' => 'required|string|max:100',
-        'usuarios.*.observaciones' => 'nullable|string'
-    ]);
+        $request->validate([
+            'usuarios' => 'required|array|min:1',
+            'usuarios.*.usuario_id' => 'required|exists:usuarios,id',
+            'usuarios.*.rol_en_reserva' => 'required|string|max:100',
+            'usuarios.*.observaciones' => 'nullable|string'
+        ]);
 
-    return response()->json(
-        $this->reservaService->asociarParticipaciones($reservaId, $request->input('usuarios')),
-        201
-    );
+        return response()->json(
+            $this->reservaService->asociarParticipaciones($reservaId, $request->input('usuarios')),
+            201
+        );
     }
 
 
     public function cancelar($id)
     {
-    return response()->json($this->reservaService->cancelarReserva($id));
+        return response()->json($this->reservaService->cancelarReserva($id));
     }
 
 
