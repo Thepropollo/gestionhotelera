@@ -48,7 +48,7 @@ use App\Http\Controllers\Api\FacturaController;
 
 // Route::apiResource('facturas', FacturaController::class);
 
-use App\Http\Controllers\Api\DetalleFacturaController;
+// use App\Http\Controllers\Api\DetalleFacturaController;
 
 // Route::apiResource('detalle-factura', DetalleFacturaController::class);
 
