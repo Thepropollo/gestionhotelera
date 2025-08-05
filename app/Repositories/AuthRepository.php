@@ -9,7 +9,7 @@ class AuthRepository
     public function buscarPorCorreo(string $correo)
     {
         return Usuario::where('correo', $correo)
-            ->with('rol') // ← Esto es lo importante
+            ->with('rol')
             ->first();
     }
 }
