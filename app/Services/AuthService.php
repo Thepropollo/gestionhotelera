@@ -18,8 +18,6 @@ class AuthService
     {
         $usuario = $this->authRepo->buscarPorCorreo($correo);
 
-        $usuario->load('rol');
-
         if (!$usuario || !Hash::check($password, $usuario->password)) {
             return null;
         }
