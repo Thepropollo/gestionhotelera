@@ -9,31 +9,31 @@ Route::get('/user', function (Request $request) {
 
 use App\Http\Controllers\Api\ClienteController;
 
-// Route::apiResource('clientes', ClienteController::class);
+Route::apiResource('clientes', ClienteController::class);
 
 use App\Http\Controllers\Api\UsuarioController;
 
-// Route::apiResource('usuarios', UsuarioController::class);
+Route::apiResource('usuarios', UsuarioController::class);
 
 use App\Http\Controllers\Api\RolController;
 
-// Route::apiResource('roles', RolController::class);
+Route::apiResource('roles', RolController::class);
 
 use App\Http\Controllers\Api\HabitacionController;
 
-// Route::apiResource('habitaciones', HabitacionController::class);
+Route::apiResource('habitaciones', HabitacionController::class);
 
 use App\Http\Controllers\Api\MesaController;
 
-// Route::apiResource('mesas', MesaController::class);
+Route::apiResource('mesas', MesaController::class);
 
 use App\Http\Controllers\Api\SalonController;
 
-// Route::apiResource('salones', SalonController::class);
+Route::apiResource('salones', SalonController::class);
 
 use App\Http\Controllers\Api\ServicioController;
 
-// Route::apiResource('servicios', ServicioController::class);
+Route::apiResource('servicios', ServicioController::class);
 
 use App\Http\Controllers\Api\ServicioExtraController;
 use App\Http\Controllers\Api\ReservaController;
@@ -42,7 +42,7 @@ Route::apiResource('reservas', ReservaController::class);
 
 use App\Http\Controllers\Api\DetalleReservaController;
 
-// Route::apiResource('detalle-reserva', DetalleReservaController::class);
+Route::apiResource('detalle-reserva', DetalleReservaController::class);
 
 use App\Http\Controllers\Api\FacturaController;
 
@@ -63,8 +63,12 @@ use App\Http\Controllers\Api\DisponibilidadController;
 
 Route::get('disponibilidad', [DisponibilidadController::class, 'consultar']);
 
+
 // Admin
-Route::middleware(['auth:sanctum', 'rol:Administrador'])->group(function () {
+Route::middleware([
+    'auth:sanctum',
+    RolMiddleware::class . ':Administrador' // Directamente la clase y los parámetros
+])->group(function () {
     Route::apiResource('clientes', ClienteController::class);
     Route::apiResource('usuarios', UsuarioController::class);
     Route::apiResource('habitaciones', HabitacionController::class);
@@ -87,8 +91,11 @@ Route::middleware(['auth:sanctum', 'rol:Administrador'])->group(function () {
     Route::post('facturas/consolidar', [FacturaController::class, 'consolidarFactura']);
 });
 
-// Recepcionistas
-Route::middleware(['auth:sanctum', 'rol:Usuario'])->group(function () {
+// Recepcionostas
+Route::middleware([
+    'auth:sanctum',
+    RolMiddleware::class . ':Usuario' // Directamente la clase y los parámetros
+])->group(function () {
     Route::apiResource('clientes', ClienteController::class);
     Route::apiResource('reservas', ReservaController::class);
     Route::apiResource('participaciones', ParticipacionController::class);
@@ -107,8 +114,11 @@ Route::middleware(['auth:sanctum', 'rol:Usuario'])->group(function () {
     Route::post('facturas/consolidar', [FacturaController::class, 'consolidarFactura']);
 });
 
-// Propietarios
-Route::middleware(['auth:sanctum', 'rol:Propietario'])->group(function () {
+
+Route::middleware([
+    'auth:sanctum',
+    RolMiddleware::class . ':Propietario' // Directamente la clase y los parámetros
+])->group(function () {
     Route::apiResource('clientes', ClienteController::class);
     Route::apiResource('usuarios', UsuarioController::class);
     Route::apiResource('roles', RolController::class);
@@ -120,4 +130,3 @@ Route::middleware(['auth:sanctum', 'rol:Propietario'])->group(function () {
 
     Route::get('clientes/{id}/reservas', [ReservaController::class, 'reservasPorCliente']);
 });
-
