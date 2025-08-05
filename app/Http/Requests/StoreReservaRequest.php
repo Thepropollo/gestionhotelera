@@ -12,7 +12,6 @@ class StoreReservaRequest extends FormRequest
     }
 
     public function rules()
-<<<<<<< HEAD
     {
         return [
             'cliente_id' => 'required|exists:clientes,id',
@@ -23,19 +22,6 @@ class StoreReservaRequest extends FormRequest
             'estado' => 'required|in:pendiente,confirmada,cancelada'
         ];
     }
-=======
-{
-    return [
-        'cliente_id'   => 'required|exists:clientes,id',
-        'tipo_reserva' => 'required|in:habitacion,salon,mesa',
-        'id_objeto'    => 'required|integer|min:1',
-        'fecha_inicio' => 'required|date|after_or_equal:today',
-        'fecha_fin'    => 'required|date|after:fecha_inicio',
-        'estado'       => 'required|in:pendiente,confirmada,cancelada',
-    ];
-}
-
->>>>>>> 374d370aa32f98f174473b190e4eac1558da4909
 
     public function messages()
     {

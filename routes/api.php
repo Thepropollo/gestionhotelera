@@ -64,62 +64,51 @@ use App\Http\Controllers\Api\DisponibilidadController;
 Route::get('disponibilidad', [DisponibilidadController::class, 'consultar']);
 
 // Admin
-Route::middleware([
-    'auth:sanctum',
-    RolMiddleware::class . ':Administrador' // Directamente la clase y los parámetros
-])->group(function () {
+Route::middleware(['auth:sanctum', 'rol:Administrador'])->group(function () {
     Route::apiResource('clientes', ClienteController::class);
     Route::apiResource('usuarios', UsuarioController::class);
     Route::apiResource('habitaciones', HabitacionController::class);
     Route::apiResource('mesas', MesaController::class);
     Route::apiResource('salones', SalonController::class);
     Route::apiResource('reservas', ReservaController::class);
-    Route::get('clientes/{id}/reservas', [ReservaController::class, 'reservasPorCliente']);
     Route::apiResource('participaciones', ParticipacionController::class);
+    Route::apiResource('servicios-extra', ServicioExtraController::class);
+
+    Route::get('clientes/{id}/reservas', [ReservaController::class, 'reservasPorCliente']);
     Route::post('reservas/{id}/participaciones', [ReservaController::class, 'asociarParticipantes']);
-    Route::post('reservas/{id}/cancelar', [ReservaController::class, 'cancelar'])->middleware('auth:sanctum');
+    Route::put('reservas/{id}/cancelar', [ReservaController::class, 'cancelar']);
     Route::get('reservas/{reservaId}/servicios', [DetalleReservaController::class, 'index']);
     Route::post('reservas/{reservaId}/servicios', [DetalleReservaController::class, 'store']);
-    Route::put('reservas/{id}/cancelar', [ReservaController::class, 'cancelar']);
-    Route::middleware('auth:sanctum')->post('/facturar', [FacturaController::class, 'facturar']);
-    Route::middleware(['auth:sanctum'])->patch('facturas/{id}/pagar', [FacturaController::class, 'marcarComoPagada']);
-    Route::middleware('auth:sanctum')->get('clientes/{id}/facturas', [FacturaController::class, 'facturasPorCliente']);
-    Route::middleware('auth:sanctum')->post('facturas/consolidar', [FacturaController::class, 'consolidarFactura']);
-    Route::apiResource('servicios-extra', ServicioExtraController::class);
-    Route::put('reservas/{id}/cancelar', [ReservaController::class, 'cancelar']);
+
+    Route::post('/facturar', [FacturaController::class, 'facturar']);
     Route::post('/facturas/completa', [FacturaController::class, 'facturar']);
-    Route::middleware('auth:sanctum')->post('/facturar', [FacturaController::class, 'facturar']);
+    Route::patch('facturas/{id}/pagar', [FacturaController::class, 'marcarComoPagada']);
+    Route::get('clientes/{id}/facturas', [FacturaController::class, 'facturasPorCliente']);
+    Route::post('facturas/consolidar', [FacturaController::class, 'consolidarFactura']);
 });
 
-// Recepcionostas
-Route::middleware([
-    'auth:sanctum',
-    RolMiddleware::class . ':Usuario' // Directamente la clase y los parámetros
-])->group(function () {
+// Recepcionistas
+Route::middleware(['auth:sanctum', 'rol:Usuario'])->group(function () {
     Route::apiResource('clientes', ClienteController::class);
     Route::apiResource('reservas', ReservaController::class);
+    Route::apiResource('participaciones', ParticipacionController::class);
+    Route::apiResource('servicios-extra', ServicioExtraController::class);
+
     Route::get('clientes/{id}/reservas', [ReservaController::class, 'reservasPorCliente']);
     Route::post('reservas/{id}/participaciones', [ReservaController::class, 'asociarParticipantes']);
-    Route::post('reservas/{id}/cancelar', [ReservaController::class, 'cancelar'])->middleware('auth:sanctum');
-    Route::apiResource('participaciones', ParticipacionController::class);
+    Route::put('reservas/{id}/cancelar', [ReservaController::class, 'cancelar']);
     Route::get('reservas/{reservaId}/servicios', [DetalleReservaController::class, 'index']);
     Route::post('reservas/{reservaId}/servicios', [DetalleReservaController::class, 'store']);
-    Route::put('reservas/{id}/cancelar', [ReservaController::class, 'cancelar']);
-    Route::middleware('auth:sanctum')->post('/facturar', [FacturaController::class, 'facturar']);
-    Route::middleware(['auth:sanctum'])->patch('facturas/{id}/pagar', [FacturaController::class, 'marcarComoPagada']);
-    Route::middleware('auth:sanctum')->get('clientes/{id}/facturas', [FacturaController::class, 'facturasPorCliente']);
-    Route::middleware('auth:sanctum')->post('facturas/consolidar', [FacturaController::class, 'consolidarFactura']);
-    Route::apiResource('servicios-extra', ServicioExtraController::class);
-    Route::put('reservas/{id}/cancelar', [ReservaController::class, 'cancelar']);
+
+    Route::post('/facturar', [FacturaController::class, 'facturar']);
     Route::post('/facturas/completa', [FacturaController::class, 'facturar']);
-    Route::middleware('auth:sanctum')->post('/facturar', [FacturaController::class, 'facturar']);
+    Route::patch('facturas/{id}/pagar', [FacturaController::class, 'marcarComoPagada']);
+    Route::get('clientes/{id}/facturas', [FacturaController::class, 'facturasPorCliente']);
+    Route::post('facturas/consolidar', [FacturaController::class, 'consolidarFactura']);
 });
 
-
-Route::middleware([
-    'auth:sanctum',
-    RolMiddleware::class . ':Propietario' // Directamente la clase y los parámetros
-])->group(function () {
+// Propietarios
+Route::middleware(['auth:sanctum', 'rol:Propietario'])->group(function () {
     Route::apiResource('clientes', ClienteController::class);
     Route::apiResource('usuarios', UsuarioController::class);
     Route::apiResource('roles', RolController::class);
@@ -131,3 +120,4 @@ Route::middleware([
 
     Route::get('clientes/{id}/reservas', [ReservaController::class, 'reservasPorCliente']);
 });
+

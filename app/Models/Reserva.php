@@ -11,27 +11,15 @@ class Reserva extends Model
 
 
     protected $fillable = [
-<<<<<<< HEAD
         'cliente_id',
         'tipo_reserva',
         'id_objeto',
-        'fecha_inicio',     // <-- Agrega esto
-        'fecha_fin',        //
+        'fecha_inicio',
+        'fecha_fin',
         'estado',
         'observaciones'
 
     ];
-=======
-    'cliente_id',
-    'tipo_reserva',
-    'id_objeto',
-    'fecha_inicio',
-    'fecha_fin',
-    'estado',
-];
-
-
->>>>>>> 374d370aa32f98f174473b190e4eac1558da4909
     public function cliente()
     {
         return $this->belongsTo(Cliente::class, 'cliente_id');
