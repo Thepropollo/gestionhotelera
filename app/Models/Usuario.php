@@ -13,7 +13,10 @@ class Usuario extends Authenticatable
     protected $table = 'usuarios';
 
     protected $fillable = [
-        'nombre', 'correo', 'password', 'rol_id'
+        'nombre',
+        'correo',
+        'password',
+        'rol_id'
     ];
 
     protected $hidden = [
@@ -22,7 +25,7 @@ class Usuario extends Authenticatable
 
     public function rol()
     {
-        return $this->belongsTo(Rol::class, 'rol_id');
+        return $this->belongsTo(Rol::class, 'id_rol');
     }
 }
 

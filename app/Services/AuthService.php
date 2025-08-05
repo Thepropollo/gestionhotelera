@@ -27,10 +27,10 @@ class AuthService
         return [
             'token' => $token,
             'usuario' => [
-                'id'     => $usuario->id,
+                'id' => $usuario->id,
                 'nombre' => $usuario->nombre,
                 'correo' => $usuario->correo,
-                'rol'    => $usuario->rol->nombre
+                'rol' => $usuario->rol->nombre
             ]
         ];
     }
