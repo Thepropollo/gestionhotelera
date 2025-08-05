@@ -4,12 +4,21 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class RolMiddleware
 {
+
     public function handle(Request $request, Closure $next, ...$roles)
     {
         $usuario = $request->user();
+
+        Log::info('RolMiddleware', [
+            'user_id' => $usuario->id ?? null,
+            'nombre' => $usuario->nombre ?? null,
+            'rol_actual' => $usuario->rol->nombre ?? 'Sin rol',
+            'roles_permitidos' => $roles
+        ]);
 
         if (!$usuario || !$usuario->rol || !in_array($usuario->rol->nombre, $roles)) {
             return response()->json([
@@ -21,4 +30,5 @@ class RolMiddleware
 
         return $next($request);
     }
+
 }
