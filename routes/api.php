@@ -27,7 +27,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 
-// 🔐 Rutas para Administrador y Propietario
+//  Rutas para Administrador y Propietario
 Route::middleware([
     'auth:sanctum',
     RolMiddleware::class . ':Administrador,Propietario'
@@ -45,11 +45,13 @@ Route::middleware([
 });
 
 
-// 🔐 Rutas para Administrador y Usuario (Recepcionistas)
+//  Rutas para Administrador y Usuario (Recepcionistas)
 Route::middleware([
     'auth:sanctum',
     RolMiddleware::class . ':Administrador,Usuario'
 ])->group(function () {
+
+    Route::apiResource('usuarios', UsuarioController::class);
     Route::apiResource('participaciones', ParticipacionController::class);
     Route::apiResource('servicios-extra', ServicioExtraController::class);
 
