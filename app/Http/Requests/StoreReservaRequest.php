@@ -16,7 +16,7 @@ class StoreReservaRequest extends FormRequest
         return [
             'cliente_id' => 'required|exists:clientes,id',
             'tipo_reserva' => 'required|in:habitacion,salon,mesa',
-            'id_objeto' => 'required|exists:mesas,id|exists:habitacions,id|exists:salones,id',
+            'id_objeto' => 'required|exists:mesas,id|exists:habitacions,id|exists:salons,id',
             'fecha_inicio' => 'required|date|after_or_equal:today',
             'fecha_fin' => 'required|date|after:fecha_inicio',
             'estado' => 'required|in:pendiente,confirmada,cancelada'
