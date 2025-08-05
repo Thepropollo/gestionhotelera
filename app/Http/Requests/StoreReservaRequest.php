@@ -13,15 +13,34 @@ class StoreReservaRequest extends FormRequest
 
     public function rules()
     {
-        return [
+        $rules = [
             'cliente_id' => 'required|exists:clientes,id',
-            'tipo_reserva' => 'required|in:habitacion,salon,mesa',
-            'id_objeto' => 'required|exists:mesas,id|exists:habitacions,id|exists:salons,id',
-            'fecha_inicio' => 'required|date|after_or_equal:today',
-            'fecha_fin' => 'required|date|after:fecha_inicio',
-            'estado' => 'required|in:pendiente,confirmada,cancelada'
+            'tipo_reserva' => 'required|in:habitacion,mesa,salon',
+            'fecha_inicio' => 'required|date',
+            'fecha_fin' => 'required|date|after_or_equal:fecha_inicio',
+            'estado' => 'nullable|string',
+            'observaciones' => 'nullable|string',
         ];
+
+        // Validación dinámica del objeto según el tipo
+        switch ($this->input('tipo_reserva')) {
+            case 'habitacion':
+                $rules['id_objeto'] = 'required|exists:habitacions,id';
+                break;
+            case 'mesa':
+                $rules['id_objeto'] = 'required|exists:mesas,id';
+                break;
+            case 'salon':
+                $rules['id_objeto'] = 'required|exists:salons,id';
+                break;
+            default:
+                $rules['id_objeto'] = 'required';
+                break;
+        }
+
+        return $rules;
     }
+
 
     public function messages()
     {
