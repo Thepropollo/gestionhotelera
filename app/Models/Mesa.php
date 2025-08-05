@@ -9,5 +9,5 @@ class Mesa extends Model
 {
     protected $table = 'mesas';
 
-    protected $fillable = ['numero', 'capacidad', 'estado'];
+    protected $fillable = ['numero', 'capacidad', 'precio', 'estado'];
 }

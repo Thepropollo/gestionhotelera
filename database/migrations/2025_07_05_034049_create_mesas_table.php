@@ -12,6 +12,7 @@ class CreateMesasTable extends Migration
             $table->id();
             $table->string('numero')->unique();
             $table->integer('capacidad');
+            $table->decimal('precio', 10, 2);
             $table->string('estado');
             $table->timestamps();
         });
